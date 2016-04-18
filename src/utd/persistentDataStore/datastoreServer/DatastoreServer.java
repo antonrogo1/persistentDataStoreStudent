@@ -9,7 +9,9 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
+import utd.persistentDataStore.datastoreServer.commands.ReadCommand;
 import utd.persistentDataStore.datastoreServer.commands.ServerCommand;
+import utd.persistentDataStore.datastoreServer.commands.WriteCommand;
 import utd.persistentDataStore.utils.ServerException;
 import utd.persistentDataStore.utils.StreamUtil;
 
@@ -60,10 +62,21 @@ public class DatastoreServer
 		}
 	}
 
-	private ServerCommand dispatchCommand(InputStream inputStream) throws ServerException
+	private ServerCommand dispatchCommand(InputStream inputStream) throws ServerException, IOException
 	{
-		// Need to implement
-		return null;
+		String commandString = StreamUtil.readLine(inputStream);
+
+		if ("write".equalsIgnoreCase(commandString)) {
+			ServerCommand serverCommand = new WriteCommand();
+			return serverCommand;
+		}
+		else if ("read".equalsIgnoreCase(commandString)) {
+			ServerCommand serverCommand = new ReadCommand();
+			return serverCommand;
+		}
+		else {
+			throw new ServerException("Unknown Request: " + commandString);
+		}
 	}
 
 	public static void main(String args[])
