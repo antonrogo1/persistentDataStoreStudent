@@ -9,9 +9,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import utd.persistentDataStore.datastoreServer.commands.ReadCommand;
-import utd.persistentDataStore.datastoreServer.commands.ServerCommand;
-import utd.persistentDataStore.datastoreServer.commands.WriteCommand;
+import utd.persistentDataStore.datastoreServer.commands.*;
 import utd.persistentDataStore.utils.ServerException;
 import utd.persistentDataStore.utils.StreamUtil;
 
@@ -66,12 +64,22 @@ public class DatastoreServer
 	{
 		String commandString = StreamUtil.readLine(inputStream);
 
+		System.out.println("In Dispatcher");
+
 		if ("write".equalsIgnoreCase(commandString)) {
 			ServerCommand serverCommand = new WriteCommand();
 			return serverCommand;
 		}
 		else if ("read".equalsIgnoreCase(commandString)) {
 			ServerCommand serverCommand = new ReadCommand();
+			return serverCommand;
+		}
+		else if ("directory".equalsIgnoreCase(commandString)) {
+			ServerCommand serverCommand = new DirectoryCommand();
+			return serverCommand;
+		}
+		else if ("delete".equalsIgnoreCase(commandString)) {
+			ServerCommand serverCommand = new DeleteCommand();
 			return serverCommand;
 		}
 		else {
