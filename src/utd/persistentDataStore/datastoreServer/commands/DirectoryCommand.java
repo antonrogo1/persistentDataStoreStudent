@@ -17,6 +17,7 @@ public class DirectoryCommand extends ServerCommand {
 
     @Override
     public void run() throws IOException, ServerException {
+
         // Getting directory listing
         List<String> directoryList = this.directory();
 
@@ -26,7 +27,6 @@ public class DirectoryCommand extends ServerCommand {
         StreamUtil.writeLine(Integer.toString(directoryList.size()), outputStream);
         for(String item : directoryList)
         {
-            System.out.println(item);
             StreamUtil.writeLine(item, outputStream);
         }
 
@@ -35,7 +35,6 @@ public class DirectoryCommand extends ServerCommand {
 
     private List<String> directory() throws ServerException, IOException {
         List<String> directoryList = FileUtil.directory();
-
         return directoryList;
     }
 }

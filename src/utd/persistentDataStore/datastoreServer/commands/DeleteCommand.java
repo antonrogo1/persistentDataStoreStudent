@@ -17,16 +17,25 @@ public class DeleteCommand extends ServerCommand
     private static Logger logger = Logger.getLogger(ReadCommand.class);
     @Override
     public void run() throws IOException, ServerException {
-        // Read message
-        String inDatasetName = StreamUtil.readLine(inputStream);
-        logger.debug("inMessage: " + inDatasetName);
+        // Read request
+        String fileToDelete = StreamUtil.readLine(inputStream);
 
-        this.delete(inDatasetName);
+        try
+        {
+            this.delete(fileToDelete);
 
-        // Write response
-        String outMessage = "ok" + "\n";
-        StreamUtil.writeLine(outMessage, outputStream);
-        logger.debug("Finished writing message");
+            // Write response
+            String outMessage = "ok" + "\n";
+            StreamUtil.writeLine(outMessage, outputStream);
+            logger.debug("Finished writing message");
+        }
+        catch (ServerException ex)
+        {
+            // Write response
+            String outMessage = "error " + ex.getMessage() +"\n";
+            StreamUtil.writeLine(outMessage, outputStream);
+            logger.debug("Finished writing error message");
+        }
     }
 
     private void delete(String fileToDelete) throws ServerException, IOException {

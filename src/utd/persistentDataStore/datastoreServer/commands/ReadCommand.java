@@ -13,29 +13,35 @@ import java.nio.charset.StandardCharsets;
  */
 public class ReadCommand extends ServerCommand
 {
-
     private static Logger logger = Logger.getLogger(ReadCommand.class);
 
     @Override
     public void run() throws IOException, ServerException
     {
-        // Read message
+        // Read request
         String inDatasetName = StreamUtil.readLine(inputStream);
-        logger.debug("inMessage: " + inDatasetName);
 
-        byte[] dataResponse = this.read(inDatasetName);
+        try {
+            byte[] responseData = this.read(inDatasetName);
 
-        // Write response
-        String outMessage = "ok" + "\n";
-        StreamUtil.writeLine(outMessage, outputStream);
-        StreamUtil.writeLine(Integer.toString(dataResponse.length), outputStream);
-        StreamUtil.writeLine(new String(dataResponse, StandardCharsets.UTF_8), outputStream);
-        logger.debug("Finished writing message");
+            // Write response
+            String outMessage = "ok" + "\n";
+            StreamUtil.writeLine(outMessage, outputStream);
+            StreamUtil.writeLine(Integer.toString(responseData.length), outputStream);
+            StreamUtil.writeData(responseData, outputStream);
+            logger.debug("Finished writing message");
+        }
+        catch (ServerException ex)
+        {
+            // Write response
+            String outMessage = "error " + ex.getMessage() +"\n";
+            StreamUtil.writeLine(outMessage, outputStream);
+            logger.debug("Finished writing error message");
+        }
     }
 
     private byte[] read(String readName) throws ServerException, IOException {
         byte[] readData = FileUtil.readData(readName);
-
         return readData;
     }
 }

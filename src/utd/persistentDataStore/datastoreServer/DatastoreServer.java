@@ -64,8 +64,6 @@ public class DatastoreServer
 	{
 		String commandString = StreamUtil.readLine(inputStream);
 
-		System.out.println("In Dispatcher");
-
 		if ("write".equalsIgnoreCase(commandString)) {
 			ServerCommand serverCommand = new WriteCommand();
 			return serverCommand;

@@ -16,23 +16,17 @@ public class WriteCommand extends ServerCommand{
     @Override
     public void run() throws IOException, ServerException
     {
-        // Read message
-        String inDatasetName = StreamUtil.readLine(inputStream);
-        String inDatasetLength = StreamUtil.readLine(inputStream);
-        String inDatasetData = StreamUtil.readLine(inputStream);
+        // Read request
+        String fileName = StreamUtil.readLine(inputStream);
+        String fileDataLength = StreamUtil.readLine(inputStream);
+        byte[] fileData = StreamUtil.readData(Integer.parseInt(fileDataLength),inputStream);
 
-        logger.debug("inDatasetName: " + inDatasetName);
-        logger.debug("inDatasetLength: " + inDatasetLength);
-        logger.debug("inDatasetData: " + inDatasetData);
-
-        byte[] data = new byte[Integer.parseInt(inDatasetLength)];
-        data = inDatasetData.getBytes();
-
-        this.writeData(inDatasetName, data);
+        this.writeData(fileName, fileData);
 
         // Write response
-        String outMessage = inDatasetName + "\n";
+        String outMessage = "ok" + "\n";
         StreamUtil.writeLine(outMessage, outputStream);
+
         logger.debug("Finished writing message");
 
     }
